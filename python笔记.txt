@@ -1,0 +1,968 @@
+#说明
+'''
+Python3.x和Python2.x的区别
+这个星期开始学习Python了，因为看的书都是基于Python2.x，而且我安装的是Python3.1，所以书上写的地方好多都不适用于Python3.1，特意在Google上search了一下3.x和2.x的区别。特此在自己的空间中记录一下，以备以后查找方便，也可以分享给想学习Python的friends.
+
+
+1.性能 
+Py3.0运行 pystone benchmark的速度比Py2.5慢30%。Guido认为Py3.0有极大的优化空间，在字符串和整形操作上可 
+以取得很好的优化结果。 
+Py3.1性能比Py2.5慢15%，还有很大的提升空间。 
+2.编码 
+Py3.X源码文件默认使用utf-8编码，这就使得以下代码是合法的： 
+    >>> 中国 = 'china' 
+    >>>print(中国) 
+    china 
+3. 语法 
+1）去除了<>，全部改用!= 
+2）去除``，全部改用repr() 
+3）关键词加入as 和with，还有True,False,None 
+4）整型除法返回浮点数，要得到整型结果，请使用// 
+5）加入nonlocal语句。使用noclocal x可以直接指派外围（非全局）变量 
+6）去除print语句，加入print()函数实现相同的功能。同样的还有 exec语句，已经改为exec()函数 
+   例如： 
+     2.X: print "The answer is", 2*2 
+     3.X: print("The answer is", 2*2) 
+     2.X: print x,                              # 使用逗号结尾禁止换行 
+     3.X: print(x, end=" ")                     # 使用空格代替换行 
+     2.X: print                                 # 输出新行 
+     3.X: print()                               # 输出新行 
+     2.X: print >>sys.stderr, "fatal error" 
+     3.X: print("fatal error", file=sys.stderr) 
+     2.X: print (x, y)                          # 输出repr((x, y)) 
+     3.X: print((x, y))                         # 不同于print(x, y)! 
+7）改变了顺序操作符的行为，例如x<y，当x和y类型不匹配时抛出TypeError而不是返回随即的 bool值  
+8）输入函数改变了，删除了raw_input，用input代替： 
+   2.X:guess = int(raw_input('Enter an integer : ')) # 读取键盘输入的方法 
+   3.X:guess = int(input('Enter an integer : '))
+
+9）去除元组参数解包。不能def(a, (b, c)):pass这样定义函数了 
+10）新式的8进制字变量，相应地修改了oct()函数。 
+   2.X的方式如下： 
+     >>> 0666 
+     438 
+     >>> oct(438) 
+     '0666' 
+   3.X这样： 
+     >>> 0666 
+     SyntaxError: invalid token (<pyshell#63>, line 1) 
+     >>> 0o666 
+     438 
+     >>> oct(438) 
+     '0o666' 
+11）增加了 2进制字面量和bin()函数 
+    >>> bin(438) 
+    '0b110110110' 
+    >>> _438 = '0b110110110' 
+    >>> _438 
+    '0b110110110' 
+12）扩展的可迭代解包。在Py3.X 里，a, b, *rest = seq和 *rest, a = seq都是合法的，只要求两点：rest是list 
+对象和seq是可迭代的。 
+13）新的super()，可以不再给super()传参数， 
+    >>> class C(object): 
+          def __init__(self, a): 
+             print('C', a) 
+    >>> class D(C): 
+          def __init(self, a): 
+             super().__init__(a) # 无参数调用super() 
+    >>> D(8) 
+    C 8 
+    <__main__.D object at 0x00D7ED90> 
+14）新的metaclass语法： 
+    class Foo(*bases, **kwds): 
+      pass 
+15）支持class decorator。用法与函数decorator一样： 
+    >>> def foo(cls_a): 
+          def print_func(self): 
+             print('Hello, world!') 
+          cls_a.print = print_func 
+          return cls_a 
+    >>> @foo 
+    class C(object): 
+      pass 
+    >>> C().print() 
+    Hello, world! 
+class decorator可以用来玩玩狸猫换太子的大把戏。更多请参阅PEP 3129 
+4. 字符串和字节串 
+1）现在字符串只有str一种类型，但它跟2.x版本的unicode几乎一样。
+
+2）关于字节串，请参阅“数据类型”的第2条目 
+5.数据类型 
+1）Py3.X去除了long类型，现在只有一种整型——int，但它的行为就像2.X版本的long 
+2）新增了bytes类型，对应于2.X版本的八位串，定义一个bytes字面量的方法如下： 
+    >>> b = b'china' 
+    >>> type(b) 
+    <type 'bytes'> 
+str对象和bytes对象可以使用.encode() (str -> bytes) or .decode() (bytes -> str)方法相互转化。 
+    >>> s = b.decode() 
+    >>> s 
+    'china' 
+    >>> b1 = s.encode() 
+    >>> b1 
+    b'china' 
+3）dict的.keys()、.items 和.values()方法返回迭代器，而之前的iterkeys()等函数都被废弃。同时去掉的还有 
+dict.has_key()，用 in替代它吧 
+6.面向对象 
+1）引入抽象基类（Abstraact Base Classes，ABCs）。 
+2）容器类和迭代器类被ABCs化，所以cellections模块里的类型比Py2.5多了很多。 
+    >>> import collections 
+    >>> print('\n'.join(dir(collections))) 
+    Callable 
+    Container 
+    Hashable 
+    ItemsView 
+    Iterable 
+    Iterator 
+    KeysView 
+    Mapping 
+    MappingView 
+    MutableMapping 
+    MutableSequence 
+    MutableSet 
+    NamedTuple 
+    Sequence 
+    Set 
+    Sized 
+    ValuesView 
+    __all__ 
+    __builtins__ 
+    __doc__ 
+    __file__ 
+    __name__ 
+    _abcoll 
+    _itemgetter 
+    _sys 
+    defaultdict 
+    deque 
+另外，数值类型也被ABCs化。关于这两点，请参阅 PEP 3119和PEP 3141。 
+3）迭代器的next()方法改名为__next__()，并增加内置函数next()，用以调用迭代器的__next__()方法 
+4）增加了@abstractmethod和 @abstractproperty两个 decorator，编写抽象方法（属性）更加方便。 
+7.异常 
+1）所以异常都从 BaseException继承，并删除了StardardError 
+2）去除了异常类的序列行为和.message属性 
+3）用 raise Exception(args)代替 raise Exception, args语法 
+4）捕获异常的语法改变，引入了as关键字来标识异常实例，在Py2.5中： 
+    >>> try: 
+    ...    raise NotImplementedError('Error') 
+    ... except NotImplementedError, error:
+
+    ...    print error.message 
+    ... 
+    Error 
+在Py3.0中： 
+    >>> try: 
+          raise NotImplementedError('Error') 
+        except NotImplementedError as error: #注意这个 as 
+          print(str(error)) 
+    Error 
+5）异常链，因为__context__在3.0a1版本中没有实现 
+8.模块变动 
+1）移除了cPickle模块，可以使用pickle模块代替。最终我们将会有一个透明高效的模块。 
+2）移除了imageop模块 
+3）移除了 audiodev, Bastion, bsddb185, exceptions, linuxaudiodev, md5, MimeWriter, mimify, popen2,  
+rexec, sets, sha, stringold, strop, sunaudiodev, timing和xmllib模块 
+4）移除了bsddb模块(单独发布，可以从http://www.jcea.es/programacion/pybsddb.htm获取) 
+5）移除了new模块 
+6）os.tmpnam()和os.tmpfile()函数被移动到tmpfile模块下 
+7）tokenize模块现在使用bytes工作。主要的入口点不再是generate_tokens，而是 tokenize.tokenize() 
+9.其它 
+1）xrange() 改名为range()，要想使用range()获得一个list，必须显式调用： 
+    >>> list(range(10)) 
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] 
+2）bytes对象不能hash，也不支持 b.lower()、b.strip()和b.split()方法，但对于后两者可以使用 b.strip(b’  
+\n\t\r \f’)和b.split(b’ ‘)来达到相同目的 
+3）zip()、map()和filter()都返回迭代器。而apply()、 callable()、coerce()、 execfile()、reduce()和reload 
+()函数都被去除了
+
+现在可以使用hasattr()来替换 callable(). hasattr()的语法如：hasattr(string, '__name__')
+
+4）string.letters和相关的.lowercase和.uppercase被去除，请改用string.ascii_letters 等 
+5）如果x < y的不能比较，抛出TypeError异常。2.x版本是返回伪随机布尔值的 
+6）__getslice__系列成员被废弃。a[i:j]根据上下文转换为a.__getitem__(slice(I, j))或 __setitem__和 
+__delitem__调用 
+7）file类被废弃，在Py2.5中： 
+    >>> file 
+    <type 'file'> 
+在Py3.X中： 
+    >>> file 
+    Traceback (most recent call last): 
+    File "<pyshell#120>", line 1, in <module> 
+       file 
+    NameError: name 'file' is not defined
+    
+'''
+
+
+python核心编程笔记
+
+
+
+print ('abcdef')
+
+注释
+#注释一行
+
+操作符
++ 加 - 减 * 乘 / 除 // 浮点除（四舍五入） % 求余 ** 乘方
+
+Python支持增量赋值。也就是指操作符和等号合并在一起。举例:
+n *= 1 等效于n = n * 1
+Python不支持自增1和自减1操作符。这是因为+和-也是单目操作符，python会将--n解释为-（-n)从而得到n，同样++n的结果也是n。
+
+
+比较操作符
+< <= > >= == != <>
+
+
+逻辑操作符
+and or not
+
+2<3<5
+Python支持类似于3<y<22的表达式。它等价于:y>3and y<22
+
+变量名：以字母下划线开头，其他字符包括数字，字母，下划线。区分大小写
+
+数字类型
+Python支持五种基本数字类型,其中三种是整形类型:
+1.	有符号整形
+2.	长整形 （表示的数字仅受限于用户计算机的虚拟内存总数，可以无限长，只要虚拟内存足够大）
+3.	布尔型（True和False）
+4.	浮点数型
+5.	复数（在其他语言中通常不被直接支持，一般通过类来实现）
+字符串
+Python的字符串被定义为引号之间的字符集合。
+Python支持使用成对的单引号、双引号、三个单引号、三个双引号来包含字符。
+使用索引操作符[]和切片操作符[:]可以得到子字符串
+ 字符串的索引规则：第一个字符的索引是0，最后一个字符的索引是-1。
+>>> x='abcdefg'
+>>> y='hijklmn'
+>>> x[0:-1]
+'abcdef'
+>>> x[0:-2]
+'abcde'
+>>> x[0:]
+'abcdefg'
+>>> x[:3]
+'abc'
+>>> x+y
+'abcdefghijklmn'
+>>> x*2
+'abcdefgabcdefg'
+加号(+)用于字符串连接运算，乘号(*)用于字符串的重复。
+
+
+列表和元组
+可以将列表和元组当做普通的“数组”，它能保存任意数量类型任意类型的Python对象。
+可以通过从0开始的数字索引访问元素。
+列表和元组可以存储不同类型的对象。
+列表使用[]中括号，元素的个数及元素的值可以改变。
+元组使用()小括号，元素的个数及元素的值不可以修改。
+列表和元组都可以通过使用索引操作符[]和切片操作符[:]得到子集。
+列表通过切片操作得到的是列表，元组通过切片操作后得到的还是元组。
+>>>a=[1,2,3,4]
+>>> a[0]
+1
+>>> a[2:4]
+[3, 4]
+>>> b=(1,2,3,4,5)
+>>> b[:3]
+(1, 2, 3)
+>>> b[2]
+3
+>>> b[2]=4
+Traceback (most recent call last):
+  File "<pyshell#20>", line 1, in <module>
+    b[2]=4
+TypeError: 'tuple' object does not support item assignment
+
+字典
+字典是Python中的映射数据类型。由键-值(key-value)对构成的。几乎所有类型的Python对象都可以用作键。不过一般还是以数字或者字符串最为常用。值可以是任意类型的Python对象。
+字典元素使用大括号{}包裹起来。
+>>> c={'host':'earth'}
+>>> c['port']=80
+>>> c
+{'host': 'earth', 'port': 80}
+>>> c.keys()
+dict_keys(['host', 'port'])
+>>> c['host']
+'earth'
+
+b='abc'
+enumerate(b)
+函数enumerate()里包含元素和索引
+
+列表解析
+可以在一行中使用一个for循环将所有值放在一个列表中。
+举例:
+OK =[x**2 for x in range(4)]
+print OK #result: [0, 1, 4, 9]
+列表解析甚至能做更复杂的事情，比如挑选出符合要求的值放入到列表中。
+举例:
+Good= [x**2 for x in range(10) if x!=2 and x!=5 ]
+print Good #result: [0, 1, 9, 16,36, 49, 64, 81]
+
+
+打开文件
+handle= open(file_name,access_mode = ‘r’)
+file_name变量是我们希望打开的文件的字符串名字。
+Access_mode中，’r’表示读取，’w’表示写入，’a’表示添加
+其它可能用到的标识还有’+’表示读写，’b’表示二进制访问。默认值为’r’。
+如果open()成功，一个文件对象句柄会被返回。所有后续的文件操作都必须通过此文件句柄进行。
+
+
+错误和异常
+try
+except
+可以通过raise语句故意引发一个异常
+
+函数
+函数在调用之前必须先定义。如果函数中没有return语句，就会自动返回None对象。
+Python是通过引用调用的。这意味着函数内对参数的改变会影响到原始对象。不过事实上只有可变对象会受此印象，对不可变对象来说，它的行为类似按值调用。
+函数定义
+def function_name([可选参数列表]):
+	"this is a function"
+	function_suite
+例：
+def function_name(x):
+	"this is a function"
+	return (x+x)
+默认参数
+函数参数可以有默认值，如果提供默认值，在函数定义中，参数以赋值语句的形式提供。事实上这仅仅是提供默认参数的语法。
+def function_name(x=true):
+	"this is a function"
+	return (x)
+
+
+实用函数
+dir([obj])显示对象的属性，如果没有提供参数，则显示全局变量的名字
+help([obj])以一种整齐美观的形式，显示对象的文档字符串，如果没有提供任何参数则会进入交互式帮助
+int([obj])将一个对象转换成整型
+len([obj])返回对象的长度
+open(fn,mode)以mode('r'=读,'w'=写)方式打开一个文件名为fn的文件
+range([start,]stop[,step])返回一个整型列表，起始值为start,结束值为stop-1,start默认为0，step默认为1
+raw_input(str)等待用户输入一个字符串，可以提供一个可选的参数str用作提示信息
+str(obj)将一个对象转换成字符串
+type(obj)返回对象的类型（返回值本身是一个type对象）
+
+
+换行
+ 一行过长的语句可以使用反斜杠‘\’分解成几行。有两种例外情况一个语句不使用反斜线也可以跨行。
+1、在使用闭合操作符时，单一语句可以跨多行。例如：在含有小括号、中括号、花括号时可以多行书写。
+2、三引号包括下的字符串也可以跨行书写。
+ 
+在python中，对象是引用传递的。在赋值时，不管这个对象是新建的，还是一个已经存在的，都是将该对象的引用(并不是值)赋值给变量。
+
+
+特殊符号含义：
+#   注释
+\n  换行
+\   继续上一行
+;   将两个语句链接在一行中
+:   将代码块的头和体分开
+语句（代码块）用缩进块的方式体现
+不同的缩进深度分隔不同的代码块
+python文件以模块的形式组织
+
+多个语句构成的代码组（:）
+缩进相同的一组语句构成一个代码块，我们称之为代码组，像if,where,def和class这样的复合语句，首行以关键字开始，以冒号：结束，该行之后的一行或多行代码构成代码组，将首行及后面的代码组称为一个子句
+
+多重赋值
+>>> x=y=z=1
+>>> x
+1
+>>> y
+1
+>>> z
+1
+‘多元’赋值（实际上和是元组赋值一样）
+>>> x,y,z=1,2,'string'
+>>> x
+1
+>>> y
+2
+>>> z
+'string'
+>>> (x,y,z)=(1,2,'string')
+变量交换值
+x,y=y,x
+
+
+内建
+除了关键字外，python还有可以在任何一级代码使用的内建（built-in）的名字集合，虽然built-in不是关键字，但是应该把它当作“系统保留字”不做他用，有些情况要求覆盖（也就是重定义，替换）它们
+
+
+专用下划线标识符
+Python用下划线作为变量前缀和后缀指定特殊变量。对于程序来说，其中的有些变量是非常有用的，而其他的则是未知或无用的。Python中下划线的特殊用法：
+__XXX 不使用'frommodule import *'导入 
+__XXX__ 系统定义名字
+_XXX 类中到私有变量名（私有的，在模块或类外不可以使用）
+
+
+文档
+__doc__
+Python提供了一个机制，可以通过__doc__特别变量，动态获得文档字串。在模块、类声明、或者函数声明中第一个没有赋值的字符串（Jerry注:可能是第一行非空的没有赋值的字符串）可以使用属性obj.__doc__来进行访问。其中obj是一个模块、类、或函数的名字。这在运行时也可以进行。
+
+模块结构和布局
+1 起始行
+2 模块文档
+3 模块导入
+4 变量定义
+5 类定义
+6 函数定义
+7 主程序
+
+主程序：无论这个模块是被别的模块导入还是作为脚本直接执行，都会执行这部分代码，通常这里不会有太多功能性代码，而是根据执行的模式调用不同的函数。
+
+__name__系统变量
+如果模块是被导入的，__name__的值为模块名字
+如果模块是被直接执行的，__name__的值为:__main__
+
+
+
+内存管理
+变量无需事先声明
+变量无需指定类型
+程序员不用关心内存管理
+变量名会被“回收”
+del语句能够直接释放资源
+
+引用计数
+增加：对象被创建，用另外的别名被创建（赋值给其他变量），作为参数传递给函数，称为容器对象的一个元素
+减少：对象别名被显示销毁，对象的一个别名被赋值给其他对象，对象被从一个窗口对象中移除，窗口对象本身被销毁
+
+del语句
+del会删除对象的一个引用
+del obj1[,obj2[,....objn]]
+
+
+检查open()是否失败，通常是IOError类型的错误
+os.path.exists()当输入一个不存在的文件名时，返回false
+
+
+Python对象
+ Python使用对象模型来存储数据。构建任何类型的值都是对象。
+所有的Python对象都拥有三个特性：身份(id)，类型(type)，值(Value)。
+身份：每一个对象都有一个唯一的身份标志自己。任何对象的身份都可以用内建函数id()来得到。这个值可以被认为是该对象的内存地址。
+类型：对象的类型决定了该对象可以保存什么类型的值，可以进行什么样的操作，以及遵循什么样的规则。可以使用内建函数type()查看Python对象的类型。type()返回的是对象而不是简单的字符串。
+值：对象表示的数据项
+>>>  z='string'
+>>> type(z)
+<class 'str'>
+>>>  y=34
+>>> type(y)
+<class 'int'>
+>>> id(y)
+505911008
+这三个特性在对象创建时就被赋值，除了值之外，其它两个特性都是只读滴。
+Python有一系列的基本（内建）数据类型。必要时也可以创建自定义类型来满足你对应用程序的需求。绝大多数应用程序通常使用标准类型，对特定的数据存储则通过创建和实例化类来实现。
+ 
+标准类型:
+数字（分为几个子类型，其中有三个是整型）
+Iinteger 整型
+Boolean 布尔型
+Long integer 长整型
+Floating point real number 浮点型
+Complex number 复数型
+String 字符串
+List 列表
+Tuple 元组
+Dictionary 字典
+
+其他内建类型:
+类型
+Null对象（None）
+文件
+集合/固定集合
+函数/方法
+模块
+类
+
+>>> type(65)
+<class 'int'>
+>>> type(type(65))
+<class 'type'>#类型对象的类型是type
+
+None
+Python中的特殊类型。他不支持任何运算也没有任何内建方法。
+None没有什么有用的属性，他的布尔值总是False。
+
+
+布尔值
+所有标准对象均可用于布尔测试。同类型的对象直接可以比较大小。每个对象天生就具有布尔True或False值。空对象、值为0的任何数字或者Null对象None的布尔值都是False。
+下列对象的布尔值都是False。
+→None
+→False（布尔类型）
+→所有的值为0的数
+→0 （整形）
+→0.0 （浮点型）
+→0L （长整形）
+→0.0 + 0.0j （复数）
+→“” （空字符串）
+→[] （空列表）
+→() （空元组）
+→{} （空字典）
+值不是上面列出来的任何值的对象的布尔值都是True。例如：non-empty、non-zero等。
+用户创建的类实例如果定义了nonzero(__nonezero__())或者length(__len__())且值为0，那么他的布尔值就是False。
+
+
+内部类型:
+代码
+帧
+跟踪记录
+切片
+省略
+Xrange
+
+代码对象：可执行对象，通过调用内建函数compile()可以得到代码对象，代码对象可以被exec命令或eval()内建函数来执行。
+
+帧对象：表示python的执行栈帧，帧对象包含python解析器在运行时所需要知道的所有信息，它的属性包括指向上一帧的链接，正在被执行的代码对象，本地及全局名称空间字典及当前指令等，每次函数调用产生一个新的帧，每一个帧对象都会相应创建一个C栈帧，用到帧对象的一个地方是跟踪记录对象。
+
+跟踪记录对象：当异常发生时，一个包含针对异常的栈跟踪记录对象被创建，如果一个异常有自己的处理程序，处理程序就可以访问这个跟踪记录对象。
+
+切片对象：当使用python扩展的切片语法时，就会创建切片对象。包括步进切片，多维切片，省略切片。多维切片语法sequence[start1:end1,start2:end2],省略切片sequence[...,start1:end1].切片对象也可以由内建函数slice()来生成。步进切片sequence[起始索引:结束索引:步进值]
+>>> foostr='abcde'
+>>> foostr[::-1]
+'edcba'
+>>> foostr[::-2]
+'eca'
+>>> foolist=[123,'xba',345,'abc']
+>>> foolist[::-1]
+['abc', 345, 'xba', 123]
+
+省略对象：用于扩展切片语法中，起记号作用，表示为省略号，类似Null对象None，省略对象有一个唯一的名字Ellipsis，他的布尔值始终为true
+
+Xrange对象：调用内建函数xrange()会生成一个Xrange对象。xrange()是内建函数range()的兄弟版本。用于需要节省内存使用或range()无法完成的超大数据集场合。
+
+
+用is和is not操作符来测试两个变量是否指向同一个对象
+a is b
+等价于
+id(a)==id(b)
+
+整型对象和字符串对象是不可变对象
+>>> a=1
+>>> b=1
+>>> id(a),id(b)
+(505911008, 505911008)
+>>> c=1.0
+>>> d=1.0
+>>> id(c),id(d)
+(46903984, 46906688)
+
+
+布尔类型：and or not
+
+
+标准类型内建函数:
+Python提供了一些内建函数用于这些基本对象类型：cmp()、repr()、str()、type()和等同于repr()函数的单反引号(``)操作符。
+
+cmp(obj1,obj2)
+比较obj和obj2.根据比较结果返回整形i。
+i<0 if obj1 < obj2 (在Python2.6.4中为-1)
+i>0 if obj1 > obj2 (在Python2.6.4中为1)
+i=0 if obj1 == obj2(在Python2.6.4中为0)
+
+repr(obj)或`obj`
+返回一个对象的字符串表示
+
+str(obj)
+返回对象适合可读性好的字符串表示
+
+type(obj)
+得到一个对象的类型，并返回相应的type对象
+
+isinstance()接受一个类型对象的元组作为参数
+>>> a=1
+>>> isinstance(a,int)
+True
+判断对象a的类型是不是整型
+
+
+类型工厂函数：
+所有的内建类型都是类，内建转换函数像int(),type(),list()等，都是工厂函数，他们看上去有点像函数，实际上他们是类。
+int(),long(),float(),complex()
+str(),unicode(),basestring()
+list(),tuple()
+type()
+dict()
+bool()
+set(),frozenset()
+object()
+classmethod()
+staticmethod()
+super()
+property()
+file()
+
+
+标准类型的分类
+1、按照存储模型分类
+ 一个能保存单个字面对象的类型，我们称之为原子或标量存储。
+ 那些可容纳多个对象的类型，我们称之为容器存储。
+ 原子类型/标量类型：数值(所有到数值类型)、字符串(全部是文字)
+ 容器类型：列表、元组、字典
+
+2、按照更新模型分类
+可变类型：列表、字典
+不可变类型：数字、字符串、元组
+
+
+3、按照访问模型分类
+ 根据访问我们存储的数据到方式对数据类型进行分类。在访问模型中共有三种访问方式：直接存取、顺序、映射。
+ 直接访问类型：数字
+ 顺序访问：字符串、列表、元组
+ 映射访问：字典
+ 对非容器类型可以直接访问，所有的数值类型都归到这一类。
+ 序列类型是指容器内的元素按从0开始的索引顺序访问。一次可以访问一个元素或多个元素。字符串、列表、元组都属于这一类。
+ 映射类型类似序列到索引属性，不过它的索引并不使用顺序的数字偏移量取值，它的元素无序存放，通过一个唯一的键来访问。这就是映射类型，它容纳的是哈希键-值对的集合。
+
+
+不支持类型
+char或byte
+指针
+int、short、long
+float、double
+
+
+删除对象引用
+del X
+
+
+
+标准整型：范围-2^31 —— 2^31-1 即：-2147483648——2147483647
+等价于C语言的长整型
+支持八进制和十六进制：八进制以数字0开始，十六进制以0x或者0X开始
+
+长整型：与机器支持的虚拟内存大小有关
+格式是整型后面加个大写或者小写的L
+（python3已经把长整型和整型合在一起）
+
+双精度浮点型
+十进制或者科学计数法表示，每个浮点型占8个字节（64）位，其中52个位表示底，11个位表示指数，剩下一个位表示符号
+如：0.0 ,-777. , 1.6 ,  -5.55548224 , 96e3*1.0 , 4.3e25 ,   4.2E-10 , -2.1425 float(12)
+
+
+
+Python语言中有关复数的几个概念:
+1、虚数不能单独存在，他们总是和一个值为0.0的实数部分一起来构成一个复数
+2、复数由实数部分和虚数部分构成
+3、表示虚数到语法：real+ imagj
+4、实数部分和虚数部分都是浮点数
+5、虚数部分必须有后缀j或者J
+
+aComplex =-8.33 +1.2j
+print aComplex.real #-8.33,复数的实部
+print aComplex.imag #1.2，复数的虚部
+print aComplex.conjugate() #-8.33 -1.2j，共轭复数
+ 
+
+coerce()方法可以实现特殊的类型转换，具体如下：
+如果有一个操作数是复数，另一个操作数被转换成复数
+否则，如果有一个操作数是浮点型，另一个操作数被转换成浮点型
+否则，如果有一个操作数是长整型，侧另一个操作数被转换成长整型
+否则，两者必然都是普通整型，无需类型转换
+
+
+
+乘方
+>>> -3**2 #**优先级高于-号
+-9
+>>> (-3)**2
+9
+>>> 4**-1 #此处**优先级低于-号
+0.25
+
+
+位操作符：
+~取反 按位与&、或|、异或^、左移<<、右移>>
+负数会被当成正数的2进制补码处理
+左移和右移N位等同于无溢出检查的2的N次幂运算，2**N
+对于长整型来说，位操作符使用一种经修改的2进制补码形式，使得符号位可以无限向左扩展
+
+取反运算~的优先级和数字单面操作符相同，是所有“位操作符”中优先级最高的一个
+
+
+数字类型转换工厂函数
+ 函数int()、long()、float()、complex()用于将其他数值类型转换为相应到数值类型。
+ 从python1.5开始，这些函数也接受字符串参数。返回字符串所表示的数值。
+ 从python1.6开始，int()和long()在转换字符串时，接受一个进制参数。如果是数字类型之间到转换，这个进制参数不能使用。
+ 从python2.2开始，有了第五个内建函数bool()。它用来将整型值1和0转换为标准布尔型True和False。
+ 从python2.3开始，Python的标准数据类型增加了一个新成员。布尔(Boolean)类型。
+Python2.2对类型和类进行了整合。所有这些内建函数现在都转变为工厂函数。
+ 所谓工厂函数，就是指这些内建函数都是类对象，当你调用他们时，实际上是创建了一个类实例。
+数值工厂函数总结：
+类（工厂函数）	操作
+bool(obj)	返回obj对象的布尔值，也就是obj.__nonzero__()方法
+int(obj,base=10)	返回一个字符串或数值对象的整形表示。
+long(obj,base=10)	返回一个字符或数据对象的长整形表示（python3.3没有该项）
+float(obj)	返回一个字符串或数据对象的浮点型表示
+complex(str) 或者
+complex(real,imag=0.0)	返回一个字符串的复数表示。或者根据给定的实数（及一个可选的虚数部分）生成一个复数对象
+
+
+功能函数
+Python提供了5个内建函数用于数值运算。
+abs()
+返回给定参数的绝对值。
+如果参数是一个复数，那么返回math.sqrt(num.real**2+ num.imag**2)
+coerce()（python3.3没有）
+数据类型转换函数。
+如果有一个操作数是复数，另一个操作数则被转换为复数。
+否则，如果有一个操作数是浮点数，另一个操作数被转换为浮点数
+否则，如果有一个操作数是长整形，另一个操作数被转换为长整形
+否则，两者必然都是普通整数，无须类型转换。
+divmod()
+divmod()内建函数把除法和取余操作结合起来。返回一个包含商和余数的元组。
+对整数来说，返回值就是地板除和取余操作的结果
+对浮点数来说，返回的商部分是math.floor(num1/num2)
+对复数来说，返回的商部分是math.floor((num1/num2).real)
+注明：
+1、math.floor和math.ceil函数的区别
+这两个函数都是截断数字的函数。这两个函数的用途都是截掉小数以后部分的位数。
+其中：math.floor总是把数字变得越来越小，而ceil总数把数字变大。
+ 
+
+pow()
+函数pow()和双星号(**)操作符都可以进行指数运算。不过两者的区别并不仅仅在于一个是操作符，一个是内建函数。
+在python1.5之前，并没有**操作符。
+内建函数pow()还接受第三个可选的参数。即一个余数参数。如果有这个参数，pow()先进行指数运算，然后将运算结果和第三个参数进行取余操作。这个特性主要用于密码计算。并且比pow(x,y)%z性能更好。
+round()
+内建函数round()用于对浮点型进行四舍五入运算。他有一个可选的小数位数参数。如果不提供小数位参数，它返回与第一个参数最接近的整形（仍然是浮点类型），第二个参数告诉round函数将结果精确到小数点后指定位。
+ 
+print round(100.124) #100.0
+print round(100.124,5) #100.124
+print round(100.123,2) #100.12
+ 
+1、math.floor和math.ceil函数的区别
+这两个函数都是截断数字的函数。这两个函数的用途都是截掉小数以后部分的位数。
+其中：math.floor总是把数字变得越来越小，而ceil总数把数字变大。
+import math
+print math.floor(99.1) #99.0
+print math.ceil(99.1) #100.0
+print math.floor(-0.1) #-1.0
+print math.ceil(-0.1) #-0.0
+
+仅用于整形的函数
+ 1、进制转换函数
+除了十进制，Python整形也支持八进制和十六进制。除此之外，Python还提供两个内建函数来返回字符串表示的八进制和十六进制整形。他们分别是oct()和hex()。他们都接受一个整形(任意进制的)对象，并返回一个对应值的字符串对象。
+ 
+2、ASCII转换函数
+Python也提供了ASCII码与其序列值之间的转换函数。每个字符对应一个唯一的整型(0~255)。函数chr()接受一个单字节整型值，返回一个字符串，其值为对应的字符。函数ord()则相反，它接受一个字符，返回其对应的整型值。
+ unichr(num)接受Unicode码值，返回其对应的Unicode字符，所接受的码值范围依赖于你的python是构建于UCS-2还是UCS-4
+ 
+随机数函数
+当程序需要随机数功能时，random模块就能派上用场。该模块包含多个伪随机数发生器，他们均以当前的时间戳为随机种子。这样只要载入这个模块就能随时开始工作。
+下面列出了该模块中最常用的函数。
+randint()	两个整型参数，返回二者之间的随机整型
+randrange()	它接受和range()函数一样的参数，随机返回range([start,]stop[,step])结果的一项
+uniform()	几乎和randint()一样，不过他返回的是二者之间的一个浮点型(不包括范围上限)
+random()	类似于uniform()，只不过下限恒等于0.0,上限恒等于1.0
+choice()	随机返回给定序列的一个元素
+
+
+
+布尔“数”
+是整型的子类，0,1
+有两个永不改变的值true和false
+布尔型是整型的子类，但是不能再被继承而生成它的子类
+没有__nonzero__()方法的对象默认值是true
+对于值为零的任何数字或空集（空列表，空元组和空字典等）布尔值为false
+在数学运算中，boolean值的true和false分别对于1和0
+以前返回整型的大部分标准库函数和内建布尔型函数现在返回布尔型
+
+数字类型的相关模块：
+decimal 十进制浮点运算类Decimal
+array 高效数值数组（字符，整型，浮点型）
+math/cmath 标准C库数学运算函数，常规数学运算在match模块，复数运算在cmath模块
+operator 数字操作符的函数实现，比如tor.sub(m,n)等价于m-n
+random 多种伪随机数生成器
+
+random模块
+randint() 两个整型参数，返回二者之间的随机整型
+randrange() 接受和range()函数一样的参数，随机返回range([start,]stop[,step])结果的一项
+uniform() 几乎和randint()一样，不过它返回的是二者之间的一个浮点型(不包括范围的上限)
+random()类似于uniform()，只不过下限恒等于0.0，上限恒等于1.0
+choice()随机返回给定序列的一个元素
+
+
+
+
+对于序列
+>>> seq=['se','rr','gg','ff']
+>>> seq[3]
+'ff'
+>>> 'xx' in seq
+False
+>>> 
+
+seq[ind] 获得序列seq的下标为ind的元素
+seq[ind1:ind2] 获得序列seq下标从ind1到ind2间的元素集合
+seq*expr 序列重复expr次
+seq1+seq2连接序列seq1和seq2
+obj in seq 判断obj元素是否包含在seq中
+obj not in seq 判断obj元素是否不包含在seq中
+
+
+
+序列索引：
+从左到右：0,1,2....N-2，N-1 即（0<=index<=len(sequence)-1）
+从右到左：-1，-2，....-(N-2),-(N-1),-N  即（-len(sequence<=index<=-1)）
+
+>>> s='abcdefg'
+>>> s[::-1] #可以视作翻转操作
+'gfedcba'
+>>> s[::2] #隔一个取一个
+'aceg'
+>>> 
+s[::]第三个参数为步长
+
+
+list(iter)把可迭代对象转换为列表
+str(obj)把obj对象转换成字符串（对象的字符串表达法）
+basestring()抽象工厂函数，其作用仅仅是为str和unicode函数提供父类，所以不能被实例化，也不能被调用
+tuple(iner)把一个可迭代对象转换成一个元组对象
+
+序列类型的内建函数
+enumerate(iter) 接受一个可迭代对象作为参数，返回一个enumerate对象（同时也是一个迭代器），该对象生成有iter每个元素的index值和item值组成的元组
+len(seq) 返回seq的长度
+max(iter,key=None) or max(arg0,arg1...,key=None) 返回iter或（arg0,arg1,...）中的最大值，如果指定了key，这个key必须是一个可以传给sort()方法的，用于比较的回调函数
+min(iter,key=None) or min(arg0,arg1...,key=None) 返回iter里面的最小值或者返回（arg0,arg1,...）里面的最小值，如果指定了key,这个key必须是一个可以传给sort()方法的，用于比较的回调函数
+reversed(seq) 接受一个序列作为参数，返回一个以逆序列访问的迭代器。
+sorted(iter,func=None,key=None,reverse=False) 接受一个可迭代对象作为参数，返回一个有序的列表，可选参数func,key和reverse的含义跟list.sort()内建函数的参数含义一样
+sum(seq,init=0) 返回seq和可选参数init的总和，其效果等同于reduce(operator,add,seq,init)
+zip([it0,it1,...itN]) 返回一个列表，其中第一个元素是it0、it1...这些元素的第一个元素组成的一个元组，第二个...依此类推
+
+
+python里面单引号和双引号作用是相同的
+
+切片[start:end]切取范围是start到end（不包括end）start<=x<end
+>>> a='abcd'
+>>> a[:]
+'abcd'
+
+另一种连接字符串的方法
+>>> foo="hello" 'world'
+>>> foo
+'helloworld'
+>>> foo='hi''world'
+>>> foo
+'hiworld'
+>>> 'I am ' 'a girl'
+'I am a girl'
+>>> 'ahwoeee'\
+	   'seiehh'
+'ahwoeeeseiehh'
+
+如果把一个普通字符串和一个unicode字符串做连接处理，python会在连接操作前先把普通字符串转化为unicode字符串
+>>>'hello' + u' ' + 'world' + u'!'
+'hello world!'
+
+>>> print('abcde %s ijklmn %d' %('fgh',26))
+abcde fgh ijklmn 26
+>>> 'abcde %s ijklmn %d' %('fgh',26)
+abcde fgh ijklmn 26
+
+字符串格式化符号
+%c 转化成字符（ASCII码值，或者长度为一的字符串）
+%r 优先使用repr()函数进行字符串转换
+%s 优先使用str()函数进行字符串转换
+%d/%i 转成有符号十进制数
+%u 转成无符号十进制数
+%o 转成无符号八进制数
+%x/%X 转成无符号十六进制数（x/X代表转换后的十六进制字符的大小写）
+%e/%E 转成科学计数法（e/E控制输出e/E）
+%f/%F 转成浮点型（小数部分自然截断）
+%g/%G %e/%E和%f/%F的简写
+%% 输出%
+
+格式化操作符辅助指令
+* 定义宽度或者小数点精度
+- 用做左对齐
++ 在正数前面显示加号
+<sp> 在正数面前显示空格
+# 在八进制数前面显示零0,在十六进制前面显示0X或者0x
+0 显示数字前面填充0而不是默认的空格
+% %%输出一个单一的%
+(var) 映射变量（字典参数）
+m.n m是显示的最小总宽度，n是小数点后的位数
+>>> "%x" % 108
+'6c'
+>>> "%#x" % 108
+'0x6c'
+>>> "%#o" % 108
+'0o154'
+>>> '%.2f' % 1234.25485
+'1234.25'
+>>> '%g' % 1234.25485
+'1234.25'
+>>> '%+d' % 144
+'+144'
+>>> '%+d' % -144
+'-144'
+>>> '%d%%' % 100
+'100%'
+>>> '%02d-%02d-%d' %(2,15,67)
+'02-15-67'
+>>> '%02d-%02d-%d' %(2,5,67)
+'02-05-67'
+>>> '%(howmany)d %(lang)s' % {'lang': 'python','howmany': 3}  #字典类型的参数提供给格式化操作符
+'3 python'
+
+原始字符串里，所有的字符都是直接按照字面意思来使用的，没有转义特殊或者不能打印的字符
+
+原始字符串操作符r/R
+>>> '\n'
+'\n'
+>>> print('\n')
+
+
+>>> r'\n'
+'\\n'
+>>> print(r'\n')
+\n
+>>> import re
+>>> m=re.search('\\[rtfvn]',r'hello world!\n')
+>>> if m is not None:m.group()
+
+>>> m=re.search(r'\\[rtfvn]',r'hello world!\n')
+>>> if m is not None:m.group()
+
+'\\n'
+
+
+unicode字符串操作符u/U（把标准字符串或者包含unicode字符的字符串转换成完全的unicode字符串对象）
+>>> u'abc'
+'abc'
+>>> u'jhhg\n'
+'jhhg\n'
+
+
+>>> str1='abc'
+>>> str2='xyz'
+>>> max(str1)   #max()的用法
+'c'
+>>> min(str2)   #min()的用法
+'x'
+
+
+>>> s='foobar'
+>>> for i,t  in enumerate(s):  #enumerate()的用法
+	print (i,t)
+	
+0 f
+1 o
+2 o
+3 b
+4 a
+5 r
+
+#input()
+
+>>> name=input("enter your name:")
+enter your name:iceyeer
+>>> name
+'iceyeer'
+
+
+chr()函数用一个范围在range(256)内的（就是0~255）整数作为参数，返回一个对应的字符。unichr()跟它一样，但返回unicode
+

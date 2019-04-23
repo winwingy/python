@@ -1,0 +1,71 @@
+Hello world !
+*cmd* 'USER winwingy@qq.com'
+*cmd* 'PASS ujumdqoictuwcbab'
+*cmd* 'STAT'
+*stat* [b'+OK', b'3', b'24297']
+*cmd* 'LIST'
+Hello world LoggerMy !
+Hello world LoggerMy !
++OK QQMail POP3 Server v1.0 Service Ready(QQMail v2.0)
+*cmd* 'USER winwingy@qq.com'
+*cmd* 'PASS ujumdqoictuwcbab'
+*cmd* 'STAT'
+*stat* [b'+OK', b'3', b'24297']
+Message:3.Size:24297
+*cmd* 'LIST'
+返回所有的邮件的编号:  [b'1 15355', b'2 4451', b'3 4491']
+*cmd* 'RETR 3'
+index =  3
+递归地打印出Message对象的层次结构：
+From: QQ邮箱管理员 <10000@qq.com>
+To:  <winwingy@qq.com>
+Subject: 有了它，还款再也不愁了！
+Text: <meta charset="gb2312">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+<style>
+    #qqml {
+        width: auto !important;
+        padding: 0 !important;
+    }
+</style>
+<table class="qmbox" style="width:100%;border-collapse:collapse;max-width: 624px;">
+    <tr>
+        <td>
+            <div style="font-size:16px;" id="qqmlText">
+              <p style="margin: 2px 0;font-size:16px;line-height: 1.4;">还在担心忘记还信用卡吗？</p>
+              <p style="margin: 2px 0;font-size:16px;line-height: 1.4;">不妨试试QQ邮箱的“还款提醒”功能。</p>
+			  <p style="margin: 2px 0;font-size:16px;line-height: 1.4;">设置还款提醒，一键跳转微信还款。</p>
+			  <p style="margin: 2px 0;font-size:16px;line-height: 1.4;">告别逾期，让你的生活井井有条。</p>
+              <p style="margin: 10px 0 10px -3px;font-size:16px;line-height: 1.4;"><a href="http://app.mail.qq.com" >
+              <img src="http://service.mail.qq.com/images/faq/huankuantixing.png" style="display:block;width:100%;_width:auto;max-width: 500px;"></a></p>
+              <div style="border:1px solid #488825;border-radius:3px; float:left;clear:both;margin-left:3px;margin-top:14px;">
+              <a style="display:block; width:120px; text-align:center;text-decoration:none;border-radius:1px;height:20px;
+              cursor:pointer; background:#62A026; color:#FFF; font-weight:bold; border:1px solid #7CB04A;  padding:0 0 3px; font-size:16px; line-height:25px;"
+              href="http://app.mail.qq.com/cgi-bin/mailapp?latest=match&apv=news&dlfrom=mq_mm_active_user|1000241|download|$PLATFORM$&fr=tz&uin=237858502&downloadclick=mq_mm_active_user|1000241|download" >下载QQ邮箱</a></div><br>
+            </div>
+            <img class="countKv"
+            src="https://mail.qq.com/cgi-bin/do?check=false&action=tgkv&uin=237858502&kv=mq_mm_user|readmail|1000241|$PLATFORM$"
+            style="position:absolute; left:-10000px; top:-10000px;"/>
+            <script>
+                try{
+                    if(window.location && (/^(m\d+\.|set\d\.|webdev2?\.)?mail.qq.com$/.test(window.location.hostname))) {
+                        var qqmlTitle = document.getElementById('qqmlTitle');
+                        var qqmlText = document.getElementById('qqmlText');
+                        var qqmlTextArray = qqmlText.getElementsByTagName('p');
+
+                        qqmlTitle.style.fontSize = '16px';
+                        qqmlText.style.fontSize = '14px';
+
+                        for(var i = 0 ,len = qqmlTextArray.length ; i < len ; i++){
+                            qqmlTextArray[i].style.fontSize = '14px';
+                        }
+                    }
+                }
+                catch(e){}
+            </script>
+        </td>
+    </tr>
+</table>
+...
+*cmd* 'QUIT'
